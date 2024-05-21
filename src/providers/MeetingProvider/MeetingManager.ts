@@ -163,25 +163,38 @@ export class MeetingManager implements AudioVideoObserver {
       eventController
     );
 
+    console.log("=====debug-lib 1",this.meetingSession )
     this.audioVideo = this.meetingSession.audioVideo;
+     console.log("=====debug-lib 2",this.audioVideo )
 
     if (eventController) {
+       console.log("=====debug-lib 3",eventController )
       eventController.addObserver(this.eventDidReceiveRef);
+      
     } else {
+      console.log("=====debug-lib 4",eventController )
       this.meetingSession.eventController.addObserver(this.eventDidReceiveRef);
     }
 
+    console.log("=====debug-lib 7" )
     this.setupAudioVideoObservers();
     this.setupDeviceLabelTrigger(deviceLabels);
     if (!skipDeviceSelection) {
       this.logger.info('[MeetingManager.join] listing and selecting devices');
+       console.log("=====debug-lib 8" )
       await this.listAndSelectDevices(deviceLabels);
+       console.log("=====debug-lib 9" )
     }
-    
+
+    console.log("=====debug-lib 10" )
     this.publishAudioVideo();
+     console.log("=====debug-lib 11" )
     this.setupActiveSpeakerDetection(activeSpeakerPolicy);
+     console.log("=====debug-lib 12" )
     this.meetingStatus = MeetingStatus.Loading;
+     console.log("=====debug-lib 13" )
     this.publishMeetingStatus();
+     console.log("=====debug-lib 14" )
   }
 
   private parseJoinParams(
@@ -404,15 +417,20 @@ export class MeetingManager implements AudioVideoObserver {
   async listAndSelectDevices(
     deviceLabels: DeviceLabels | DeviceLabelTrigger = DeviceLabels.AudioAndVideo
   ): Promise<void> {
+    console.log("=====debug-lib 15" )
     await this.updateDeviceLists();
 
+    console.log("=====debug-lib 16" )
     // If `deviceLabels` is of `DeviceLabelTrigger` type, no device will be selected.
     // In this case, you need to handle the device selection yourself.
+
+     console.log("=====debug-lib 17", typeof deviceLabels )
     if (typeof deviceLabels === 'function') return;
 
     let isAudioDeviceRequested: boolean = false;
     let isVideoDeviceRequested: boolean = false;
 
+     console.log("=====debug-lib 18", deviceLabels )
     switch (deviceLabels) {
       case DeviceLabels.None:
         break;
@@ -428,6 +446,7 @@ export class MeetingManager implements AudioVideoObserver {
         break;
     }
 
+     console.log("=====debug-lib 19" )
     if (
       isAudioDeviceRequested &&
       !this.selectedAudioInputDevice &&
@@ -436,17 +455,22 @@ export class MeetingManager implements AudioVideoObserver {
     ) {
       this.selectedAudioInputDevice = this.audioInputDevices[0].deviceId;
       try {
+         console.log("=====debug-lib 20" )
         await this.audioVideo?.startAudioInput(
           this.audioInputDevices[0].deviceId
         );
+          console.log("=====debug-lib 22" )
       } catch (error) {
         console.error(
           'MeetingManager failed to select audio input device on join',
           error
         );
+         console.log("=====debug-lib 23" )
       }
       this.publishSelectedAudioInputDevice();
     }
+
+     console.log("=====debug-lib 24", {isAudioDeviceRequested, this.selectedAudioOutputDevice,  this.audioOutputDevices} )
     if (
       isAudioDeviceRequested &&
       !this.selectedAudioOutputDevice &&
